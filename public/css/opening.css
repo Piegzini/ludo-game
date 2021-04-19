@@ -33,8 +33,9 @@ input {
   outline: none;
   background: transparent;
   border: 0px;
+  padding-bottom: 5px;
   border-bottom: 1px #ffffff solid;
-  margin-bottom: 30px;
+  margin-bottom: 25px;
   font-size: 20px;
   color: #ffffff;
   text-align: center;
@@ -53,4 +54,9 @@ button {
   color: #ffffff;
   font-size: 17px;
   border-radius: 3px;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #555964;
 }
