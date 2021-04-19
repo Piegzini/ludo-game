@@ -10,10 +10,6 @@ const roomSchema = new Schema({
     type: Boolean,
     default: false,
   },
-  playersCount: {
-    type: Number,
-    default: 0,
-  },
   players: {
     type: Array,
   },
