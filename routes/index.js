@@ -8,12 +8,16 @@ routers.get('/', (req, res) => {
   res.sendFile(join(htmlPath, 'index.html'));
 });
 
-routers.get('/information', (req, res) => {
+routers.get('/information', async (req, res) => {
   const session_cookie = req.cookies.session_data;
   if (!session_cookie) {
-    const information = { inGame: false };
+    const information = { buildLobby: true };
     res.send(JSON.stringify(information));
   } else if (session_cookie) {
+    const parsed_session_cookie = JSON.parse(session_cookie);
+    const room_id = parsed_session_cookie.room_id;
+    const information = await getPlayersInfo(room_id);
+    res.send(information);
   }
 });
 
@@ -35,10 +39,10 @@ routers.post('/player', async (req, res) => {
     nick,
   };
 
-  // res.cookie('session_data', JSON.stringify(session_data), {
-  //   maxAge: 1 * 60 * 60 * 1000,
-  //   httpOnly: true,
-  // });
+  res.cookie('session_data', JSON.stringify(session_data), {
+    maxAge: 1 * 60 * 60 * 1000,
+    httpOnly: true,
+  });
 
   res.end();
 });
