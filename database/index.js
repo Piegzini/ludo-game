@@ -35,7 +35,6 @@ const findFreeRoom = async () => {
     const room = await Room.findOne({
       $or: [{ players: { $size: 0 } }, { players: { $size: 1 } }, { players: { $size: 2 } }, { players: { $size: 3 } }],
     });
-    console.log(room);
     return room;
   } catch (error) {
     console.log(error);
@@ -44,24 +43,38 @@ const findFreeRoom = async () => {
 
 module.exports.findFreeRoom = findFreeRoom;
 
-const getColorFromGame = async (room_id) => {
-  const room = await Room.findOne({ _id: room_id });
-  const colors = room.game.colors;
-  const randomNumber = Math.floor(Math.random() * colors.length);
-  const color = colors[randomNumber];
-  console.log('file: index.js - line 52 - getColorFromGame - color', color);
+const getColorFromCurrentFreeGame = async () => {
+  try {
+    const room = await findFreeRoom();
+    const colors = room.game.colors;
+    const randomNumber = Math.floor(Math.random() * colors.length);
+    const color = colors[randomNumber];
+    await room.updateOne({ $pull: { 'game.colors': color } });
+    return color;
+  } catch (error) {
+    console.log(error);
+  }
+};
 
-  await room.updateOne({ $pull: { 'game.colors': color } });
-  return color;
+const createPlayer = async (player_data) => {
+  try {
+    const color = await getColorFromCurrentFreeGame();
+    const relevant_player_data = {
+      id: player_data.id,
+      nick: player_data.nick,
+      color: color,
+    };
+    const createdPlayer = new Player(relevant_player_data);
+    return createdPlayer;
+  } catch (error) {
+    console.log(error);
+  }
 };
 
 const addPlayer = async (room_id, player_data) => {
   try {
-    const color = await getColorFromGame(room_id);
-    player_data.color = color;
-    const player = new Player(player_data);
     const room = await Room.findOne({ _id: room_id });
-
+    const player = await createPlayer(player_data);
     await room.updateOne({ $push: { players: player } });
   } catch (error) {
     console.log(error);

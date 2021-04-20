@@ -5,7 +5,7 @@ const htmlPath = resolve('public', 'html');
 const { createRoom, findFreeRoom, addPlayer } = require('../database/index.js');
 
 routers.get('/', (req, res) => {
-  res.sendFile(join(htmlPath, 'opening.html'));
+  res.sendFile(join(htmlPath, 'index.html'));
 });
 
 routers.post('/player', async (req, res) => {
