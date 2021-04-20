@@ -32,10 +32,14 @@ module.exports.createRoom = createRoom;
 
 const findFreeRoom = async () => {
   try {
-    const room = await Room.findOne({
+    let freeRoom = await Room.findOne({
       $or: [{ players: { $size: 0 } }, { players: { $size: 1 } }, { players: { $size: 2 } }, { players: { $size: 3 } }],
     });
-    return room;
+
+    if (!freeRoom) {
+      freeRoom = await createRoom();
+    }
+    return freeRoom;
   } catch (error) {
     console.log(error);
   }
@@ -71,7 +75,7 @@ const createPlayer = async (player_data) => {
   }
 };
 
-const addPlayer = async (room_id, player_data) => {
+const addToRoomPlayer = async (room_id, player_data) => {
   try {
     const room = await Room.findOne({ _id: room_id });
     const player = await createPlayer(player_data);
@@ -80,4 +84,14 @@ const addPlayer = async (room_id, player_data) => {
     console.log(error);
   }
 };
-module.exports.addPlayer = addPlayer;
+module.exports.addToRoomPlayer = addToRoomPlayer;
+
+const getPlayersInfo = async (room_id) => {
+  const room = await Room.findOne({ _id: room_id });
+  const players = room.players;
+  const json_players = JSON.stringify(players);
+
+  return json_players;
+};
+
+module.exports.getPlayersInfo = getPlayersInfo
