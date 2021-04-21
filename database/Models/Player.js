@@ -3,7 +3,7 @@ class Player {
     this._id = id;
     this.nick = nick;
     this.color = color;
-    this.status = 0;
+    this.isReady = false;
   }
 }
 module.exports = Player;
