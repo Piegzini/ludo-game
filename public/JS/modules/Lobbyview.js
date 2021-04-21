@@ -19,16 +19,14 @@ export default class Lobbyview {
       playerContentDiv.setAttribute('id', id);
       const childsOfContentDiv = playerContentDiv.querySelectorAll('p');
       childsOfContentDiv[0].textContent = nick;
-      console.log(status ? 'Gotowy' : 'Nie Gotowy');
       childsOfContentDiv[1].textContent = isReady ? 'Gotowy' : 'Nie Gotowy';
     }
   }
 
   updateCheckBoxContent(players_data) {
+    this.statusInput.addEventListener('click', this.updateReadyStatus);
     for (const loop_player of players_data) {
-      this.statusInput.addEventListener('click', this.updateReadyStatus);
-
-      const playerValidator = loop_player.id === this.currentPlayerId;
+      const playerValidator = loop_player._id === this.currentPlayerId;
       if (playerValidator) {
         if (loop_player.isReady) {
           this.statusInput.setAttribute('checked', 'checked');

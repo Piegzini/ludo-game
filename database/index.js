@@ -98,12 +98,13 @@ module.exports.getPlayersInfo = getPlayersInfo;
 
 const updatePlayerReadyStatus = async (data_to_find, status_data) => {
   try {
-    const { room_id, player_id } = data_to_find;
+    const { room_id, session_id } = data_to_find;
+
     const { isReady } = status_data;
     const room = await Room.findOne({ _id: room_id });
     const players = room.players;
     for (const loop_player of players) {
-      const validator = loop_player.id === player_id;
+      const validator = loop_player._id === session_id;
       if (validator) {
         loop_player.isReady = isReady;
       }

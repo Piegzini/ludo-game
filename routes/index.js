@@ -22,7 +22,12 @@ routers.get('/information', async (req, res) => {
 });
 routers.get('/player', (req, res) => {
   const session_data = req.cookies.session_data;
-  res.send(session_data);
+  if (session_data) {
+    res.send(session_data);
+  } else if (!session_data) {
+    const data = JSON.stringify({ noPlayer: true });
+    res.send(data);
+  }
 });
 routers.post('/player', async (req, res) => {
   const nick = req.body.nick;

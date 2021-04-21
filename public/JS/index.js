@@ -8,8 +8,12 @@ class View {
   }
 
   async init() {
-    this.currentPlayerData = await fetch('http://localhost:8080/player');
-
+    const response = await fetch('http://localhost:8080/player');
+    const parsed_response = await response.json();
+    const noPlayer = parsed_response?.noPlayer;
+    if (!noPlayer) {
+      this.currentPlayerData = parsed_response;
+    }
     try {
       const response = await fetch('http://localhost:8080/information');
       if (!response.ok) {
