@@ -36,7 +36,7 @@ routers.post('/player', async (req, res) => {
     nick: nick,
     id: session_id,
   };
-
+  console.log('jestem tu');
   const freeRoom = await findFreeRoom();
   const room_id = freeRoom.id;
   await addToRoomPlayer(room_id, player_data);

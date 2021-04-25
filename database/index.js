@@ -35,8 +35,16 @@ const findFreeRoom = async () => {
     let freeRoom = await Room.findOne({
       $or: [{ players: { $size: 0 } }, { players: { $size: 1 } }, { players: { $size: 2 } }, { players: { $size: 3 } }],
     });
-
-    if (!freeRoom) {
+    let readyPlayers = [];
+    const players = freeRoom.players;
+    for (const player of players) {
+      if (player.isReady) {
+        readyPlayers.push(player);
+      }
+    }
+    console.log('file: index.js - line 40 - players', players);
+    const validatorCountOfReadyPlayers = readyPlayers.length < 2;
+    if (!freeRoom || !validatorCountOfReadyPlayers) {
       freeRoom = await createRoom();
     }
     return freeRoom;
