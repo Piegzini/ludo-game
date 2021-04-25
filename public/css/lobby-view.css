@@ -6,9 +6,8 @@ body {
   height: 100vh;
 
   display: flex;
-  flex-direction: row;
-  justify-content: center;
-  align-items: flex-start;
+  flex-direction: column;
+  justify-content: space-around;
 }
 p {
   margin: 0px;
@@ -16,6 +15,10 @@ p {
   display: block;
 }
 
+#player-bar {
+  display: flex;
+  flex-direction: row;
+}
 #players-wrapper {
   /* width: 50%;
   height: 20%; */

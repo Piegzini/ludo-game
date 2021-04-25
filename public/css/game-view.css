@@ -1,0 +1,8 @@
+#board-image {
+  height: 500px;
+  width: 500px;
+  background-image: url('../images/plansza.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: cover;
+}

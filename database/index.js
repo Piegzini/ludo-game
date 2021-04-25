@@ -32,17 +32,26 @@ module.exports.createRoom = createRoom;
 
 const findFreeRoom = async () => {
   try {
-    let freeRoom = await Room.findOne({
+    let freeRoom;
+    let freeRooms = await Room.find({
       $or: [{ players: { $size: 0 } }, { players: { $size: 1 } }, { players: { $size: 2 } }, { players: { $size: 3 } }],
     });
 
-    let validatorCountOfReadyPlayers = null;
-    if (freeRoom) {
-      const room_id = freeRoom._id;
-      validatorCountOfReadyPlayers = await checkStartGame(room_id);
+    if (freeRooms) {
+      for (const freeRoom_loop of freeRooms) {
+        const room_id = freeRoom_loop._id;
+        roomStartedGame = await checkStartGame(room_id);
+
+        if (!roomStartedGame) {
+          console.log('file: index.js - line 47 - roomStartedGame', roomStartedGame);
+
+          freeRoom = freeRoom_loop;
+          break;
+        }
+      }
     }
 
-    if (!freeRoom || validatorCountOfReadyPlayers) {
+    if (!freeRoom) {
       freeRoom = await createRoom();
     }
     return freeRoom;
@@ -124,11 +133,12 @@ const checkStartGame = async (room_id) => {
       readyPlayers.push(player);
     }
   }
-  const validatorCountOfReadyPlayers = readyPlayers.length < 2;
-  if (!validatorCountOfReadyPlayers) {
+  const playersMoreThanTwo = players.length >= 2;
+  const allPlayersReady = readyPlayers.length === players.length;
+  if (playersMoreThanTwo && allPlayersReady) {
     await startGame(room_id);
     return true;
-  } else if (validatorCountOfReadyPlayers) {
+  } else {
     return false;
   }
 };
