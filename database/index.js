@@ -35,16 +35,14 @@ const findFreeRoom = async () => {
     let freeRoom = await Room.findOne({
       $or: [{ players: { $size: 0 } }, { players: { $size: 1 } }, { players: { $size: 2 } }, { players: { $size: 3 } }],
     });
-    let readyPlayers = [];
-    const players = freeRoom.players;
-    for (const player of players) {
-      if (player.isReady) {
-        readyPlayers.push(player);
-      }
+
+    let validatorCountOfReadyPlayers = null;
+    if (freeRoom) {
+      const room_id = freeRoom._id;
+      validatorCountOfReadyPlayers = await checkStartGame(room_id);
     }
-    console.log('file: index.js - line 40 - players', players);
-    const validatorCountOfReadyPlayers = readyPlayers.length < 2;
-    if (!freeRoom || !validatorCountOfReadyPlayers) {
+
+    if (!freeRoom || validatorCountOfReadyPlayers) {
       freeRoom = await createRoom();
     }
     return freeRoom;
@@ -104,10 +102,35 @@ const getPlayersInfo = async (room_id) => {
 
 module.exports.getPlayersInfo = getPlayersInfo;
 
+const startGame = async (room_id) => {
+  const room = await Room.findOne({ _id: room_id });
+  const game = room.game;
+  game.isStarted = true;
+  await room.updateOne({ game: game });
+};
+
+const checkStartGame = async (room_id) => {
+  const room = await Room.findOne({ _id: room_id });
+  let readyPlayers = [];
+  const players = room.players;
+
+  for (const player of players) {
+    if (player.isReady) {
+      readyPlayers.push(player);
+    }
+  }
+  const validatorCountOfReadyPlayers = readyPlayers.length < 2;
+  if (!validatorCountOfReadyPlayers) {
+    await startGame(room_id);
+    return true;
+  } else if (validatorCountOfReadyPlayers) {
+    return false;
+  }
+};
+
 const updatePlayerReadyStatus = async (data_to_find, status_data) => {
   try {
     const { room_id, session_id } = data_to_find;
-
     const { isReady } = status_data;
     const room = await Room.findOne({ _id: room_id });
     const players = room.players;
