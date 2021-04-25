@@ -1,5 +1,5 @@
 import Formview from './modules/Formview.js';
-import Lobbyview from './modules/Lobbyview.js';
+import Gameview from './modules/Gameview.js';
 class View {
   constructor() {
     this.currentPlayerData;
@@ -25,7 +25,7 @@ class View {
       if (buildLobby) {
         this.view = new Formview();
       } else {
-        this.view = new Lobbyview(parsed_repsonse, this.currentPlayerData);
+        this.view = new Gameview(parsed_repsonse, this.currentPlayerData);
       }
     } catch (error) {
       console.log(error);

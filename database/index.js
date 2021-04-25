@@ -142,6 +142,7 @@ const updatePlayerReadyStatus = async (data_to_find, status_data) => {
     }
 
     await room.updateOne({ players: players });
+    await checkStartGame(room_id);
     console.log(room);
   } catch (error) {
     console.log(error);

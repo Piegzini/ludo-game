@@ -1,4 +1,4 @@
-export default class Lobbyview {
+export default class Gameview {
   constructor(players_information, { session_id }) {
     this.currentPlayerId = session_id;
     this.template = document.querySelector('#lobby');
@@ -6,7 +6,7 @@ export default class Lobbyview {
     this.playersContentDivs;
     this.statusInput;
 
-    this.buildView(players_information);
+    this.buildPlayersBar(players_information);
     this.setLobbyUpdater();
   }
 
@@ -37,7 +37,7 @@ export default class Lobbyview {
     }
   }
 
-  buildView(players_information) {
+  buildPlayersBar(players_information) {
     const players_data = players_information;
     const lobby = document.querySelector('#input-wrapper');
     if (lobby) {
@@ -64,8 +64,6 @@ export default class Lobbyview {
       }
 
       const players_data = await response.json();
-      console.log('file: Lobbyview.js - line 50 - players_data', players_data);
-
       this.updatePlayersDivs(players_data);
     } catch (error) {
       console.log(error);
