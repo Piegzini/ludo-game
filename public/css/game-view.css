@@ -1,8 +1,31 @@
 #board-image {
   height: 500px;
   width: 500px;
+  position: relative;
   background-image: url('../images/plansza.png');
   background-repeat: no-repeat;
   background-position: center;
   background-size: cover;
+}
+
+.pawn {
+  width: 35px;
+  height: 35px;
+  border: 3px solid black;
+  border-radius: 50%;
+  background: white;
+  position: absolute;
+}
+
+.red {
+  background-color: #ff6b81;
+}
+.green {
+  background-color: #7bed9f;
+}
+.blue {
+  background-color: #70a1ff;
+}
+.yellow {
+  background-color: #eccc68;
 }

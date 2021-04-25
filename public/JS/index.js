@@ -16,6 +16,7 @@ class View {
     const noPlayer = parsed_currentPlayer?.noPlayer;
     if (!noPlayer) {
       this.currentPlayerData = parsed_currentPlayer;
+      console.log('file: index.js - line 19 - this.currentPlayerData', this.currentPlayerData);
     }
     try {
       const response = await fetch('http://localhost:8080/information');
@@ -28,9 +29,13 @@ class View {
       if (buildLobby) {
         this.view = new Formview();
       } else {
-        const { players } = parsed_response;
+        const { game, players } = parsed_response;
         this.view = new Lobbyview(players, this.currentPlayerData);
         this.setLobbyUpdater();
+        if (game.isStarted) {
+          this.view.removeSwitch();
+          this.boardView = new Gameview(players);
+        }
       }
     } catch (error) {
       console.log(error);
@@ -39,7 +44,6 @@ class View {
 
   lobbyUpdater = async () => {
     try {
-      console.log('hej');
       const response = await fetch('http://localhost:8080/information');
       if (!response.ok) {
         throw new Error(`http error: ${response.status}`);
@@ -49,7 +53,6 @@ class View {
       this.view.updatePlayersDivs(players);
 
       if (game.isStarted && !this.boardView) {
-        console.log(game);
         this.view.removeSwitch();
         this.boardView = new Gameview();
       }

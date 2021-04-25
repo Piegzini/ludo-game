@@ -2,7 +2,7 @@ const express = require('express');
 const routers = express.Router();
 const { join, resolve } = require('path');
 const htmlPath = resolve('public', 'html');
-const { findFreeRoom, addToRoomPlayer, getPlayersInfo, updatePlayerReadyStatus } = require('../database/index.js');
+const { findFreeRoom, addToRoomPlayer, getPlayersInfo, updatePlayerReadyStatus, getColorFromCurrentFreeGame } = require('../database/index.js');
 
 routers.get('/', (req, res) => {
   res.sendFile(join(htmlPath, 'index.html'));
@@ -32,12 +32,13 @@ routers.get('/player', (req, res) => {
 routers.post('/player', async (req, res) => {
   const nick = req.body.nick;
   const session_id = req.session.id;
+  const freeRoom = await findFreeRoom();
+  const color = await getColorFromCurrentFreeGame();
   const player_data = {
     nick: nick,
     id: session_id,
+    color: color,
   };
-  console.log('jestem tu');
-  const freeRoom = await findFreeRoom();
   const room_id = freeRoom.id;
   await addToRoomPlayer(room_id, player_data);
 
@@ -45,6 +46,7 @@ routers.post('/player', async (req, res) => {
     session_id,
     room_id,
     nick,
+    color,
   };
 
   res.cookie('session_data', JSON.stringify(session_data), {

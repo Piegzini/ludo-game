@@ -1,14 +1,34 @@
+import Positions from './Positions.js';
+
 export default class Gameview {
-  constructor() {
+  constructor(players_data) {
     this.template = document.querySelector('#board-wrapper');
     this.board;
-
-    this.buildView();
+    this.positions = new Positions();
+    this.buildView(players_data);
   }
 
-  buildView() {
-    console.log(this.template);
+  buildView(players_data) {
+    const players = players_data;
     const boardTemplateClone = this.template.content.cloneNode(true);
-    document.body.append(boardTemplateClone);
+    const board = boardTemplateClone.querySelector('#board-image');
+    const pawnsIdes = ['first', 'second', 'third', 'fourth'];
+    console.log(players);
+    for (const player of players) {
+      const color = player.color;
+      const basePawnsPositionsTable = this.positions.basePositions[color];
+
+      for (const [index, basePawnPositions] of basePawnsPositionsTable.entries()) {
+        const pawn = document.createElement('div');
+        pawn.classList.add('pawn', `${color}`);
+        pawn.setAttribute('id', `${pawnsIdes[index]}-${color}`);
+        for (const key in basePawnPositions) {
+          pawn.style[key] = `${basePawnPositions[key]}px`;
+        }
+
+        board.append(pawn.cloneNode(true));
+      }
+    }
+    document.body.append(board);
   }
 }

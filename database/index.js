@@ -43,8 +43,6 @@ const findFreeRoom = async () => {
         roomStartedGame = await checkStartGame(room_id);
 
         if (!roomStartedGame) {
-          console.log('file: index.js - line 47 - roomStartedGame', roomStartedGame);
-
           freeRoom = freeRoom_loop;
           break;
         }
@@ -74,14 +72,14 @@ const getColorFromCurrentFreeGame = async () => {
     console.log(error);
   }
 };
+module.exports.getColorFromCurrentFreeGame = getColorFromCurrentFreeGame;
 
 const createPlayer = async (player_data) => {
   try {
-    const color = await getColorFromCurrentFreeGame();
     const relevant_player_data = {
       id: player_data.id,
       nick: player_data.nick,
-      color: color,
+      color: player_data.color,
     };
     const createdPlayer = new Player(relevant_player_data);
     return createdPlayer;

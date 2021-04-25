@@ -67,6 +67,6 @@ export default class Lobbyview {
 
   removeSwitch() {
     const switchButton = document.querySelector('#switch-wrapper');
-    switchButton.remove();
+    switchButton?.remove();
   }
 }
