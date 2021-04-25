@@ -95,7 +95,12 @@ module.exports.addToRoomPlayer = addToRoomPlayer;
 const getPlayersInfo = async (room_id) => {
   const room = await Room.findOne({ _id: room_id });
   const players = room.players;
-  const json_players = JSON.stringify(players);
+  const game = room.game;
+  const information = {
+    game,
+    players,
+  };
+  const json_players = JSON.stringify(information);
 
   return json_players;
 };
