@@ -31,4 +31,10 @@ export default class Gameview {
     }
     document.body.append(board);
   }
+  updatedTurnTime(current_color, turn_Time) {
+    const turnTime = turn_Time;
+    const currentPlayerContentDiv = document.querySelector(`#p-${current_color}`);
+    const timer = currentPlayerContentDiv.querySelector('.p-status');
+    timer.textContent = turnTime;
+  }
 }

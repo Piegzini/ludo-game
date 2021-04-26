@@ -50,11 +50,17 @@ class View {
       }
 
       const { game, players } = await response.json();
+      const { currentTurnColor, turnTime, isStarted } = game;
+      console.log('file: index.js - line 54 - isStarted', isStarted);
       this.view.updatePlayersDivs(players);
 
-      if (game.isStarted && !this.boardView) {
+      if (isStarted && !this.boardView) {
         this.view.removeSwitch();
-        this.boardView = new Gameview();
+        this.boardView = new Gameview(players);
+      }
+      if (currentTurnColor && this.boardView) {
+        console.log('jestem tutaj, a tu current color: ', currentTurnColor);
+        this.boardView.updatedTurnTime(currentTurnColor, turnTime);
       }
     } catch (error) {
       console.log(error);

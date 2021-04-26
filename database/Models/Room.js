@@ -6,10 +6,6 @@ const roomSchema = new Schema({
   _id: {
     type: mongoose.ObjectId,
   },
-  finished: {
-    type: Boolean,
-    default: false,
-  },
   players: {
     type: Array,
   },

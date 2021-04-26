@@ -2,6 +2,7 @@ const mongoose = require('mongoose');
 const Room = require('./Models/Room.js');
 const Game = require('./Models/Game.js');
 const Player = require('./Models/Player.js');
+const Gamelogic = require('./Game-logic.js');
 
 const uri = 'mongodb+srv://admin:admin@ludo-game.yw3mx.mongodb.net/ludo-game?retryWrites=true&w=majority';
 
@@ -57,7 +58,6 @@ const findFreeRoom = async () => {
     console.log(error);
   }
 };
-
 module.exports.findFreeRoom = findFreeRoom;
 
 const getColorFromCurrentFreeGame = async () => {
@@ -111,14 +111,16 @@ const getPlayersInfo = async (room_id) => {
 
   return json_players;
 };
-
 module.exports.getPlayersInfo = getPlayersInfo;
 
 const startGame = async (room_id) => {
   const room = await Room.findOne({ _id: room_id });
   const game = room.game;
-  game.isStarted = true;
-  await room.updateOne({ game: game });
+  if (!game.isStarted) {
+    game.isStarted = true;
+    new Gamelogic(room_id);
+    await room.updateOne({ game: game });
+  }
 };
 
 const checkStartGame = async (room_id) => {
@@ -133,6 +135,7 @@ const checkStartGame = async (room_id) => {
   }
   const playersMoreThanTwo = players.length >= 2;
   const allPlayersReady = readyPlayers.length === players.length;
+
   if (playersMoreThanTwo && allPlayersReady) {
     await startGame(room_id);
     return true;
