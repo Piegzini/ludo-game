@@ -4,7 +4,12 @@ class Player {
     this.nick = nick;
     this.color = color;
     this.isReady = false;
-    this.positions = {};
+    this.positions = {
+      first: {},
+      second: {},
+      third: {},
+      fourth: {},
+    };
   }
 }
 module.exports = Player;

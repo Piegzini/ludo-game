@@ -15,6 +15,36 @@
   border-radius: 50%;
   background: white;
   position: absolute;
+  z-index: 1;
+}
+
+#roll-wrapper {
+  position: absolute;
+  top: 23%;
+  left: 10%;
+  display: flex;
+  flex-direction: row;
+  justify-content: center;
+  align-items: center;
+}
+#roll-button {
+  cursor: pointer;
+  width: 150px;
+  height: 60px;
+  text-align: center;
+  line-height: 55px;
+  border-radius: 15px;
+  border: #ced6e0 3px solid;
+  transition: all 0.3s;
+}
+
+#roll-button:hover {
+  background-color: #57606f;
+}
+
+.dice-roll {
+  width: 70px;
+  height: 70px;
 }
 
 .red {

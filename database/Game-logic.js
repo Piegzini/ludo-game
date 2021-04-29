@@ -29,13 +29,14 @@ class Gamelogic {
     } else {
       if (turnTime === 0) {
         game.currentTurnColor = await this.nextPlayer(currentTurnColor, players);
+        game.rolledNumber = null;
         game.turnTime = 10;
       } else {
         game.turnTime = turnTime - 2;
       }
     }
 
-    console.log(game.turnTime);
+    process.stdout.write(turnTime);
     await room.updateOne({ game: game });
   };
 
@@ -58,6 +59,21 @@ class Gamelogic {
     const nextPlayer = players[nextPlayerIndex];
     const colorOfNextPlayer = nextPlayer.color;
     return colorOfNextPlayer;
+  }
+
+  async rollNumber() {
+    const room = await Room.findOne({ _id: this.room_id });
+    const { game } = room;
+    let { rolledNumber } = game;
+    const min = 1;
+    const max = 6;
+
+    rolledNumber = Math.floor(Math.random() * (max - min)) + min;
+    game.rolledNumber = rolledNumber;
+
+    await room.updateOne({ game: game });
+    console.log(game);
+    return rolledNumber;
   }
 }
 

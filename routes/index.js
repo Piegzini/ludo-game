@@ -3,6 +3,7 @@ const routers = express.Router();
 const { join, resolve } = require('path');
 const htmlPath = resolve('public', 'html');
 const { findFreeRoom, addToRoomPlayer, getPlayersInfo, updatePlayerReadyStatus, getColorFromCurrentFreeGame } = require('../database/index.js');
+const Gamelogic = require('../database/Game-logic.js');
 
 routers.get('/', (req, res) => {
   res.sendFile(join(htmlPath, 'index.html'));
@@ -20,6 +21,16 @@ routers.get('/information', async (req, res) => {
     res.send(information);
   }
 });
+
+routers.get('/rollnumber', async (req, res) => {
+  const session_data = JSON.parse(req.cookies.session_data);
+  const { room_id } = session_data;
+  const logicOfCurrentGame = Gamelogic.allGamesInProgress[room_id];
+  const rolledNumber = await logicOfCurrentGame.rollNumber();
+  const responseData = { rolledNumber };
+  res.send(JSON.stringify(responseData));
+});
+
 routers.get('/player', (req, res) => {
   const session_data = req.cookies.session_data;
   if (session_data) {

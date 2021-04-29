@@ -4,6 +4,8 @@ export default class Gameview {
   constructor(players_data) {
     this.template = document.querySelector('#board-wrapper');
     this.board;
+    this.rollButton;
+    this.dice;
     this.positions = new Positions();
     this.buildView(players_data);
   }
@@ -13,7 +15,7 @@ export default class Gameview {
     const boardTemplateClone = this.template.content.cloneNode(true);
     const board = boardTemplateClone.querySelector('#board-image');
     const pawnsIdes = ['first', 'second', 'third', 'fourth'];
-    console.log(players);
+   
     for (const player of players) {
       const color = player.color;
       const basePawnsPositionsTable = this.positions.basePositions[color];
@@ -36,5 +38,41 @@ export default class Gameview {
     const currentPlayerContentDiv = document.querySelector(`#p-${current_color}`);
     const timer = currentPlayerContentDiv.querySelector('.p-status');
     timer.textContent = turnTime;
+  }
+
+  rollNumber = async () => {
+    try {
+      const rolledNumber_response = await fetch('http://localhost:8080/rollnumber');
+      const parsed_response = await rolledNumber_response.json();
+      const { rolledNumber } = parsed_response;
+      console.log('file: Gameview.js - line 48 - rolledNumber', rolledNumber);
+      this.buildDice(rolledNumber);
+    } catch (erorr) {
+      console.log(error);
+    }
+  };
+
+  buildDice(rolled_number) {
+    const dice = document.createElement('img');
+    dice.classList.add('dice-roll');
+    dice.src = `/images/dice-${rolled_number}.png`;
+    const diceWrapper = document.querySelector('#roll-wrapper');
+    diceWrapper.append(dice);
+    this.dice = document.querySelector('.dice-roll');
+    
+  }
+
+  buildRollButton() {
+    const wrapperOfRoll = document.createElement('div');
+    wrapperOfRoll.setAttribute('id', 'roll-wrapper');
+
+    const rollButton = document.createElement('div');
+    rollButton.setAttribute('id', 'roll-button');
+    rollButton.addEventListener('click', this.rollNumber);
+    rollButton.textContent = 'Rzuć kostką';
+
+    wrapperOfRoll.append(rollButton);
+    document.body.append(wrapperOfRoll);
+    this.rollButton = document.querySelector('#roll-button');
   }
 }

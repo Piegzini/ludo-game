@@ -50,8 +50,7 @@ class View {
       }
 
       const { game, players } = await response.json();
-      const { currentTurnColor, turnTime, isStarted } = game;
-      console.log('file: index.js - line 54 - isStarted', isStarted);
+      const { currentTurnColor, turnTime, isStarted, rolledNumber } = game;
       this.view.updatePlayersDivs(players);
 
       if (isStarted && !this.boardView) {
@@ -59,8 +58,22 @@ class View {
         this.boardView = new Gameview(players);
       }
       if (currentTurnColor && this.boardView) {
-        console.log('jestem tutaj, a tu current color: ', currentTurnColor);
         this.boardView.updatedTurnTime(currentTurnColor, turnTime);
+      }
+      const turnOfCurrentPlayer = currentTurnColor === this.currentPlayerData.color;
+      if (turnOfCurrentPlayer && !this.boardView.rollButton && !rolledNumber) {
+        this.boardView.buildRollButton();
+      } else if (this.boardView.rollButton && rolledNumber) {
+        this.boardView.rollButton.remove();
+        this.boardView.rollButton = null;
+      } else if (!turnOfCurrentPlayer && this.boardView.rollButton) {
+        this.boardView.rollButton.remove();
+        this.boardView.rollButton = null;
+      }
+
+      if (turnTime === 0 && this.boardView.dice) {
+        this.boardView.dice.remove();
+        this.boardView.dice = null;
       }
     } catch (error) {
       console.log(error);
