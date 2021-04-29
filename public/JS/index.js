@@ -6,6 +6,7 @@ class View {
     this.currentPlayerData;
     this.view;
     this.boardView;
+    this.playerPawnPositions = {};
     this.lobbyUpdaterInterval;
     this.init();
   }
@@ -59,6 +60,7 @@ class View {
       }
       if (currentTurnColor && this.boardView) {
         this.boardView.updatedTurnTime(currentTurnColor, turnTime);
+        this.boardView.updatePawns(players);
       }
       const turnOfCurrentPlayer = currentTurnColor === this.currentPlayerData.color;
       if (turnOfCurrentPlayer && !this.boardView.rollButton && !rolledNumber) {
@@ -69,8 +71,9 @@ class View {
       } else if (!turnOfCurrentPlayer && this.boardView.rollButton) {
         this.boardView.rollButton.remove();
         this.boardView.rollButton = null;
+      } else if (rolledNumber && turnOfCurrentPlayer) {
+        this.boardView.addListenersToPawns(rolledNumber, players, currentTurnColor);
       }
-
       if (turnTime === 0 && this.boardView.dice) {
         this.boardView.dice.remove();
         this.boardView.dice = null;

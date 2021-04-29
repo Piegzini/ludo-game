@@ -36,7 +36,7 @@ class Gamelogic {
       }
     }
 
-    process.stdout.write(turnTime);
+    process.stdout.write(` ${turnTime}`);
     await room.updateOne({ game: game });
   };
 
@@ -66,7 +66,7 @@ class Gamelogic {
     const { game } = room;
     let { rolledNumber } = game;
     const min = 1;
-    const max = 6;
+    const max = 2;
 
     rolledNumber = Math.floor(Math.random() * (max - min)) + min;
     game.rolledNumber = rolledNumber;

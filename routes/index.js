@@ -68,6 +68,10 @@ routers.post('/player', async (req, res) => {
   res.end();
 });
 
+routers.post('/player/move', async (req, res) => {
+  
+});
+
 routers.patch('/player/isready', async (req, res) => {
   const session_data = JSON.parse(req.cookies.session_data);
   const isReady = req.body.isReady;

@@ -1,29 +1,29 @@
-export default class Positions {
+class Positions {
   constructor() {
     this.basePositions = {
       yellow: [
-        { positionNumber: 'base', top: 5, left: 5 },
-        { positionNumber: 'base', top: 5, left: 50 },
-        { positionNumber: 'base', top: 50, left: 5 },
-        { positionNumber: 'base', top: 50, left: 50 },
+        { positionNumber: 'base', id: 'first', top: 5, left: 5 },
+        { positionNumber: 'base', id: 'second', top: 5, left: 50 },
+        { positionNumber: 'base', id: 'third', top: 50, left: 5 },
+        { positionNumber: 'base', id: 'fourth',top: 50, left: 50 },
       ],
       green: [
-        { positionNumber: 'base', top: 5, left: 415 },
-        { positionNumber: 'base', top: 5, left: 460 },
-        { positionNumber: 'base', top: 50, left: 415 },
-        { positionNumber: 'base', top: 50, left: 460 },
+        { positionNumber: 'base', id: 'first', top: 5, left: 415 },
+        { positionNumber: 'base', id: 'second', top: 5, left: 460 },
+        { positionNumber: 'base',id: 'third',  top: 50, left: 415 },
+        { positionNumber: 'base', id: 'fourth',top: 50, left: 460 },
       ],
       red: [
-        { positionNumber: 'base', top: 415, left: 415 },
-        { positionNumber: 'base', top: 415, left: 460 },
-        { positionNumber: 'base', top: 460, left: 415 },
-        { positionNumber: 'base', top: 460, left: 460 },
+        { positionNumber: 'base', id: 'first', top: 415, left: 415 },
+        { positionNumber: 'base', id: 'second', top: 415, left: 460 },
+        { positionNumber: 'base', id: 'third', top: 460, left: 415 },
+        { positionNumber: 'base', id: 'fourth',top: 460, left: 460 },
       ],
       blue: [
-        { positionNumber: 'base', top: 415, left: 5 },
-        { positionNumber: 'base', top: 415, left: 50 },
-        { positionNumber: 'base', top: 460, left: 5 },
-        { positionNumber: 'base', top: 460, left: 50 },
+        { positionNumber: 'base', id: 'first', top: 415, left: 5 },
+        { positionNumber: 'base', id: 'second', top: 415, left: 50 },
+        { positionNumber: 'base', id: 'third', top: 460, left: 5 },
+        { positionNumber: 'base',id: 'fourth', top: 460, left: 50 },
       ],
     };
     this.startedPositions = {
@@ -87,3 +87,6 @@ export default class Positions {
     ];
   }
 }
+
+const positions = new Positions();
+module.exports = positions;
