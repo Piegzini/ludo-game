@@ -1,12 +1,14 @@
 import Positions from './Positions.js';
-
+console.log(Positions.startedPositions);
+import view from '../index.js';
 export default class Gameview {
   constructor(players_data) {
     this.template = document.querySelector('#board-wrapper');
     this.board;
     this.rollButton;
+    this.rollWrapper;
+    this.afterMove = false;
     this.dice;
-    this.positions = new Positions();
     this.buildView(players_data);
   }
 
@@ -38,7 +40,8 @@ export default class Gameview {
     timer.textContent = turnTime;
   }
 
-  rollNumber = async () => {
+  rollNumber = async (e) => {
+    e.target.removeEventListener('click', this.rollNumber);
     try {
       const rolledNumber_response = await fetch('http://localhost:8080/rollnumber');
       const parsed_response = await rolledNumber_response.json();
@@ -62,48 +65,101 @@ export default class Gameview {
     });
 
     const { positions } = currentPlayer;
-    console.log('file: Gameview.js - line 65 - positions', positions);
     for (const key in positions) {
-      console.log('file: Gameview.js - line 66 - key', key);
       const position = positions[key];
       const numberOfPosition = position.positionNumber;
       if (numberOfPosition === 'base') {
         const enableToStart = rolledNumber === 1 || rolledNumber === 6;
         if (enableToStart) {
-          console.log('można startować');
           const colorOfPlayer = currentPlayer.color;
           const divId = position.id;
           const pawnDiv = document.querySelector(`#${divId}-${colorOfPlayer}`);
-          pawn.div.style.cursor = 'pointer';
+          pawnDiv.style.cursor = 'pointer';
           pawnDiv.addEventListener('click', this.move);
+          pawnDiv.addEventListener('mouseover', this.onPrediction);
+          pawnDiv.addEventListener('mouseout', this.leftPrediction);
         }
+      } else {
+        const colorOfPlayer = currentPlayer.color;
+        const divId = position.id;
+        const pawnDiv = document.querySelector(`#${divId}-${colorOfPlayer}`);
+        pawnDiv.style.cursor = 'pointer';
+        pawnDiv.addEventListener('click', this.move);
+        pawnDiv.addEventListener('mouseover', this.onPrediction);
+        pawnDiv.addEventListener('mouseout', this.leftPrediction);
       }
     }
   };
+
+  removeListenersFromPawns = () => {
+    const pawns = document.querySelectorAll('.pawn');
+    for (const pawn of pawns) {
+      pawn.removeEventListener('click', this.move);
+      pawn.removeEventListener('mouseout', this.leftPrediction);
+      pawn.removeEventListener('mouseover', this.onPrediction);
+
+      pawn.style.cursor = 'default';
+      console.log('hej');
+    }
+  };
+
   updatePawns(players_data) {
     const players = players_data;
     for (const player of players) {
       const { positions, color } = player;
       for (const position of positions) {
-        const { top, left, id } = position;
+        const { top, left, id, positionNumber } = position;
         const pawn = document.querySelector(`#${id}-${color}`);
         pawn.style.top = `${top}px`;
         pawn.style.left = `${left}px`;
+        pawn.dataset.positionNumber = positionNumber;
       }
     }
   }
 
   move = async (e) => {
+    this.leftPrediction(e);
     const divId = e.target.id;
     const color = divId.split('-')[1];
     const id = divId.split('-')[0];
     const data = { id, color };
+    this.removeListenersFromPawns();
 
-    await fetch('http://localhost:8080/rollnumber', {
-      method: 'post',
+    const response = await fetch('http://localhost:8080/player/move', {
+      method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
     });
+    const parsed_response = await response.text();
+    if (parsed_response === 'succes') {
+      this.afterMove = true;
+      this.removeListenersFromPawns();
+    }
+  };
+
+  onPrediction = (e) => {
+    console.log('hej');
+    const pawnDiv = e.target;
+    const color = pawnDiv.id.split('-')[1];
+    const positionNumber = pawnDiv.dataset.positionNumber;
+    const rolledNumber = view.rolledNumber;
+    const gamePositions = Positions.gamePositions;
+    console.log('file: Gameview.js - line 142 - gamePositions', gamePositions);
+
+    let predictPosition = positionNumber === 'base' ? Positions.startedPositions[color] : rolledNumber + parseInt(positionNumber);
+    predictPosition = predictPosition % 40;
+    console.log('file: Gameview.js - line 144 - predictPosition', predictPosition);
+    const predictDiv = document.createElement('div');
+    predictDiv.classList.add('pawn', `${color}`);
+    predictDiv.setAttribute('id', 'predict');
+    console.log(gamePositions[predictPosition].top);
+    predictDiv.style.top = `${gamePositions[predictPosition].top}px`;
+    predictDiv.style.left = `${gamePositions[predictPosition].left}px`;
+    document.querySelector('#board-image').append(predictDiv);
+  };
+
+  leftPrediction = () => {
+    document.querySelector('#predict')?.remove();
   };
 
   buildDice(rolled_number) {
@@ -113,6 +169,7 @@ export default class Gameview {
     const diceWrapper = document.querySelector('#roll-wrapper');
     diceWrapper.append(dice);
     this.dice = document.querySelector('.dice-roll');
+    this.rollWrapper = document.querySelector('#roll-wrapper');
   }
 
   buildRollButton() {

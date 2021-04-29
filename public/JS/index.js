@@ -6,7 +6,7 @@ class View {
     this.currentPlayerData;
     this.view;
     this.boardView;
-    this.playerPawnPositions = {};
+    this.rolledNumber;
     this.lobbyUpdaterInterval;
     this.init();
   }
@@ -52,8 +52,11 @@ class View {
 
       const { game, players } = await response.json();
       const { currentTurnColor, turnTime, isStarted, rolledNumber } = game;
+      this.rolledNumber = rolledNumber;
       this.view.updatePlayersDivs(players);
-
+      if (turnTime === 10) {
+        this.boardView.afterMove = false;
+      }
       if (isStarted && !this.boardView) {
         this.view.removeSwitch();
         this.boardView = new Gameview(players);
@@ -71,10 +74,13 @@ class View {
       } else if (!turnOfCurrentPlayer && this.boardView.rollButton) {
         this.boardView.rollButton.remove();
         this.boardView.rollButton = null;
-      } else if (rolledNumber && turnOfCurrentPlayer) {
+      } else if (rolledNumber && turnOfCurrentPlayer && !this.boardView.afterMove) {
         this.boardView.addListenersToPawns(rolledNumber, players, currentTurnColor);
       }
       if (turnTime === 0 && this.boardView.dice) {
+        this.boardView.rollWrapper.remove();
+        this.boardView.rollWrapper = null;
+        this.boardView.removeListenersFromPawns();
         this.boardView.dice.remove();
         this.boardView.dice = null;
       }

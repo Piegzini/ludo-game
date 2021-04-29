@@ -59,3 +59,8 @@
 .yellow {
   background-color: #eccc68;
 }
+
+#predict {
+  filter: opacity(50%);
+  background-color: pink;
+}

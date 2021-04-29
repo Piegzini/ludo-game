@@ -69,7 +69,13 @@ routers.post('/player', async (req, res) => {
 });
 
 routers.post('/player/move', async (req, res) => {
-  
+  const session_data = JSON.parse(req.cookies.session_data);
+  const { room_id } = session_data;
+  console.log('zapyanie');
+  const logicOfCurrentGame = Gamelogic.allGamesInProgress[room_id];
+  const { id, color } = req.body;
+  await logicOfCurrentGame.pawnMove(id, color);
+  res.send('succes');
 });
 
 routers.patch('/player/isready', async (req, res) => {

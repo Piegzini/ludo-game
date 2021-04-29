@@ -1,4 +1,4 @@
-export default class Positions {
+class Positions {
   constructor() {
     this.basePositions = {
       yellow: [
@@ -87,3 +87,7 @@ export default class Positions {
     ];
   }
 }
+
+const positions = new Positions();
+
+export default positions;

@@ -9,7 +9,8 @@ export default class Formview {
 
     this.build();
   }
-  sendPlayerName = async () => {
+  sendPlayerName = async (e) => {
+    e.target.removeEventListener('click', this.sendPlayerName);
     const nick = this.input.value;
     const nickValidator = nick.split(' ').join('');
     const lengthOfNick = nickValidator.length <= 12;
