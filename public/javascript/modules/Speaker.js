@@ -6,8 +6,12 @@ export default class Speaker {
   }
 
   speak(number) {
-    const utterThis = new SpeechSynthesisUtterance(this.numbers[number - 1]);
-    utterThis.voice = this.voices[0];
+    const utterThis = new SpeechSynthesisUtterance(number);
+    for (let i = 0; i < this.voices.length; i++) {
+      if (this.voices[i].lang === 'pl-PL') {
+        utterThis.voice = this.voices[i];
+      }
+    }
     this.synth.speak(utterThis);
   }
 }

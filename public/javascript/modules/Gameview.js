@@ -71,9 +71,7 @@ export default class Gameview {
       const { positionNumber } = position;
       const numberOfPosition = position.positionNumber;
       if (numberOfPosition === 'base') {
-        // const enableToStart = rolledNumber === 1 || rolledNumber === 6;
-        const enableToStart = true;
-
+        const enableToStart = rolledNumber === 1 || rolledNumber === 6;
         if (enableToStart) {
           const divId = position.id;
           const pawnDiv = document.querySelector(`#${divId}-${color}`);

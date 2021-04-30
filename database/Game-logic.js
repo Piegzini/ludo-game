@@ -66,7 +66,7 @@ class Gamelogic {
     const { game } = room;
     let { rolledNumber } = game;
     const min = 1;
-    const max = 30;
+    const max = 7;
 
     rolledNumber = Math.floor(Math.random() * (max - min)) + min;
     game.rolledNumber = rolledNumber;
