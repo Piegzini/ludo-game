@@ -1,4 +1,3 @@
-import Speaker from './Speaker.js';
 export default class Lobbyview {
   constructor(players_information, { session_id }) {
     this.currentPlayerId = session_id;

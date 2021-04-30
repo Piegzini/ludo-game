@@ -138,7 +138,7 @@ export default class Gameview {
     const data = { id, color };
     this.removeListenersFromPawns();
 
-    const response = await fetch('http://localhost:8080/player/move', {
+    const response = await fetch('/player/move', {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),
