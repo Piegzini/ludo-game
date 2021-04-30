@@ -35,7 +35,6 @@ export default class Formview {
   };
 
   build() {
-
     const templateClone = this.template.content.cloneNode(true);
     document.body.append(templateClone);
     this.wrapper = document.querySelector('#input-wrapper');

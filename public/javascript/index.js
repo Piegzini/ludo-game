@@ -5,7 +5,7 @@ class View {
   constructor() {
     this.currentPlayerData;
     this.view;
-    this.boardView;
+    this.boardView = null;
     this.rolledNumber;
     this.lobbyUpdaterInterval;
     this.init();
@@ -20,6 +20,8 @@ class View {
     }
     try {
       const response = await fetch('/information');
+      console.log(response.redirected);
+
       if (!response.ok) {
         throw new Error(`http error: ${response.status}`);
       }
@@ -30,6 +32,7 @@ class View {
         this.view = new Formview();
       } else {
         const { game, players } = parsed_response;
+
         this.view = new Lobbyview(players, this.currentPlayerData);
         this.setLobbyUpdater();
         if (game.isStarted) {
@@ -68,10 +71,10 @@ class View {
       const turnOfCurrentPlayer = currentTurnColor === this.currentPlayerData.color;
       if (turnOfCurrentPlayer && !this.boardView.rollButton && !rolledNumber) {
         this.boardView.buildRollButton();
-      } else if (this.boardView.rollButton && rolledNumber) {
+      } else if (this.boardView?.rollButton && rolledNumber) {
         this.boardView.rollButton.remove();
         this.boardView.rollButton = null;
-      } else if (!turnOfCurrentPlayer && this.boardView.rollButton) {
+      } else if (!turnOfCurrentPlayer && this.boardView?.rollButton) {
         this.boardView.rollButton.remove();
         this.boardView.rollButton = null;
       } else if (rolledNumber && turnOfCurrentPlayer && !this.boardView.afterMove) {
@@ -79,7 +82,7 @@ class View {
       }
       if (turnTime === 0) {
         document.querySelector('#predict')?.remove();
-        this.boardView.rollWrapper.remove();
+        this.boardView.rollWrapper?.remove();
         this.boardView.rollWrapper = null;
         this.boardView.removeListenersFromPawns();
         this.boardView.dice = null;

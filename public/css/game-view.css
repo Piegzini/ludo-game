@@ -61,7 +61,9 @@
 }
 
 #predict {
-  background-color: rgb(109, 33, 46);
+  background: #32ce08;
+  opacity: 0.7;
+  background: radial-gradient(#32ce08 0%, #f20000 48%, #34109e 100%);
 }
 
 .available {
@@ -71,6 +73,6 @@
 
 @keyframes availablePawn {
   to {
-    opacity: 0.3;
+    background-color: #fff;
   }
 }

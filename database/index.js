@@ -4,7 +4,7 @@ const Game = require('./Models/Game.js');
 const Player = require('./Models/Player.js');
 const Gamelogic = require('./Game-logic.js');
 
-const Positions  = require('./static-data/Positions.js');
+const Positions = require('./static-data/Positions.js');
 const uri = 'mongodb+srv://admin:admin@ludo-game.yw3mx.mongodb.net/ludo-game?retryWrites=true&w=majority';
 
 mongoose.connect(uri, {
@@ -106,15 +106,19 @@ module.exports.addToRoomPlayer = addToRoomPlayer;
 
 const getPlayersInfo = async (room_id) => {
   const room = await Room.findOne({ _id: room_id });
-  const players = room.players;
-  const game = room.game;
-  const information = {
-    game,
-    players,
-  };
-  const json_players = JSON.stringify(information);
+  if (room) {
+    const players = room.players;
+    const game = room.game;
+    const information = {
+      game,
+      players,
+    };
+    const json_players = JSON.stringify(information);
 
-  return json_players;
+    return json_players;
+  } else if (!room) {
+    return 'no room';
+  }
 };
 module.exports.getPlayersInfo = getPlayersInfo;
 
