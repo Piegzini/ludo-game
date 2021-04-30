@@ -30,7 +30,7 @@ class Gamelogic {
       if (turnTime === 0) {
         game.currentTurnColor = await this.nextPlayer(currentTurnColor, players);
         game.rolledNumber = null;
-        game.turnTime = 10;
+        game.turnTime = 30;
       } else {
         game.turnTime = turnTime - 2;
       }

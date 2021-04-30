@@ -2,7 +2,7 @@ class Game {
   constructor() {
     this.isStarted = false;
     this.currentTurnColor = null;
-    this.turnTime = 6;
+    this.turnTime = 30;
     this.rolledNumber = null;
     this.finished = false;
     this.winner;

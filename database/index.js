@@ -142,7 +142,7 @@ const checkStartGame = async (room_id) => {
       readyPlayers.push(player);
     }
   }
-  const playersMoreThanTwo = players.length >= 1;
+  const playersMoreThanTwo = players.length >= 2;
   const allPlayersReady = readyPlayers.length === players.length;
 
   if (playersMoreThanTwo && allPlayersReady) {
