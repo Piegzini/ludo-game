@@ -17,7 +17,6 @@ class View {
     const noPlayer = parsed_currentPlayer?.noPlayer;
     if (!noPlayer) {
       this.currentPlayerData = parsed_currentPlayer;
-      console.log('file: index.js - line 19 - this.currentPlayerData', this.currentPlayerData);
     }
     try {
       const response = await fetch('http://localhost:8080/information');
@@ -51,9 +50,10 @@ class View {
       }
 
       const { game, players } = await response.json();
-      const { currentTurnColor, turnTime, isStarted, rolledNumber } = game;
+      const { currentTurnColor, turnTime, isStarted, rolledNumber, finished, winner } = game;
       this.rolledNumber = rolledNumber;
       this.view.updatePlayersDivs(players);
+
       if (turnTime === 10) {
         this.boardView.afterMove = false;
       }
@@ -77,12 +77,18 @@ class View {
       } else if (rolledNumber && turnOfCurrentPlayer && !this.boardView.afterMove) {
         this.boardView.addListenersToPawns(rolledNumber, players, currentTurnColor);
       }
-      if (turnTime === 0 && this.boardView.dice) {
+      if (turnTime === 0) {
+        document.querySelector('#predict')?.remove();
         this.boardView.rollWrapper.remove();
         this.boardView.rollWrapper = null;
         this.boardView.removeListenersFromPawns();
-        this.boardView.dice.remove();
         this.boardView.dice = null;
+        this.boardView.rollButton = null;
+      }
+
+      if (finished) {
+        clearInterval(this.lobbyUpdaterInterval);
+        alert(`Wygrał ${winner}`);
       }
     } catch (error) {
       console.log(error);

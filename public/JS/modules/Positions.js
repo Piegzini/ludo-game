@@ -26,6 +26,32 @@ class Positions {
         { positionNumber: 'base', top: 460, left: 50 },
       ],
     };
+    this.endPositions = {
+      green: [
+        { top: 50, left: 232.5 },
+        { top: 95, left: 232.5 },
+        { top: 140, left: 232.5 },
+        { top: 185, left: 232.5 },
+      ],
+      red: [
+        { top: 230, left: 412.5 },
+        { top: 230, left: 367.5 },
+        { top: 230, left: 322.5 },
+        { top: 230, left: 277.5 },
+      ],
+      blue: [
+        { top: 410, left: 232.5 },
+        { top: 365, left: 232.5 },
+        { top: 320, left: 232.5 },
+        { top: 275, left: 232.5 },
+      ],
+      yellow: [
+        { top: 230, left: 52.5 },
+        { top: 230, left: 97.5 },
+        { top: 230, left: 142.5 },
+        { top: 230, left: 187.5 },
+      ],
+    };
     this.startedPositions = {
       green: 0,
       red: 10,

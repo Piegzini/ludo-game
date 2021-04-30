@@ -1,3 +1,4 @@
+import Speaker from './Speaker.js';
 export default class Lobbyview {
   constructor(players_information, { session_id }) {
     this.currentPlayerId = session_id;
@@ -37,6 +38,7 @@ export default class Lobbyview {
   }
 
   buildPlayersBar(players_information) {
+   
     const players_data = players_information;
     const lobby = document.querySelector('#input-wrapper');
     if (lobby) {

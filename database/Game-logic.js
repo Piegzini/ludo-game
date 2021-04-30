@@ -66,7 +66,7 @@ class Gamelogic {
     const { game } = room;
     let { rolledNumber } = game;
     const min = 1;
-    const max = 7;
+    const max = 30;
 
     rolledNumber = Math.floor(Math.random() * (max - min)) + min;
     game.rolledNumber = rolledNumber;
@@ -84,6 +84,7 @@ class Gamelogic {
     const indexOfCurrentPlayer = this.findCurrentPlayer(players, currentTurnColor);
     const currentPlayer = players[indexOfCurrentPlayer];
     const positionsOfCurrentPlayer = currentPlayer.positions;
+    let movedPosition;
     for (const key in positionsOfCurrentPlayer) {
       const position = positionsOfCurrentPlayer[key];
       const idOfPosition = position.id;
@@ -94,20 +95,76 @@ class Gamelogic {
           positionsOfCurrentPlayer[key].positionNumber = startedPosition;
           positionsOfCurrentPlayer[key].top = Positions.gamePositions[startedPosition].top;
           positionsOfCurrentPlayer[key].left = Positions.gamePositions[startedPosition].left;
+          movedPosition = positionsOfCurrentPlayer[key];
+        } else if (positionNumber + rolledNumber >= 40 + Positions.startedPositions[color]) {
+          const finishPositions = currentPlayer.endPositions;
+          console.log('file: Game-logic.js - line 101 - finishPosition', finishPositions);
+          const countOfFreeFinishPositions = finishPositions.length;
+          const countToLastFinishPosition = positionNumber + rolledNumber - (40 + Positions.startedPositions[color]);
+          if (countToLastFinishPosition < countOfFreeFinishPositions) {
+            positionsOfCurrentPlayer[key].positionNumber += rolledNumber;
+            positionsOfCurrentPlayer[key].top = finishPositions[countToLastFinishPosition].top;
+            positionsOfCurrentPlayer[key].left = finishPositions[countToLastFinishPosition].left;
+            movedPosition = positionsOfCurrentPlayer[key];
+
+            if (countToLastFinishPosition === countOfFreeFinishPositions - 1) {
+              currentPlayer.endPositions.pop();
+              for (const nd_position of positionsOfCurrentPlayer) {
+                const nd_positionNumber = nd_position.positionNumber;
+                const countOfFreeFinishPositions = currentPlayer.endPositions.length;
+                const countToLastFinishPosition = nd_positionNumber - (40 + Positions.startedPositions[color]);
+                if (countOfFreeFinishPositions - 1 === countToLastFinishPosition) {
+                  currentPlayer.endPositions.pop();
+                }
+              }
+
+              if (currentPlayer.endPositions.length === 0) {
+                game.finished = true;
+                game.winner = currentPlayer.color;
+                setTimeout(async () => {
+                  clearInterval(this.turnTimeInterval);
+                  await Room.deleteOne({ _id: this.room_id });
+                }, 2000);
+              }
+            }
+          }
         } else {
           positionsOfCurrentPlayer[key].positionNumber += rolledNumber;
-          positionsOfCurrentPlayer[key].positionNumber = positionsOfCurrentPlayer[key].positionNumber % 40;
-          const current_positionNumber = positionsOfCurrentPlayer[key].positionNumber;
-
+          const current_positionNumber = positionsOfCurrentPlayer[key].positionNumber % 40;
           positionsOfCurrentPlayer[key].top = Positions.gamePositions[current_positionNumber].top;
           positionsOfCurrentPlayer[key].left = Positions.gamePositions[current_positionNumber].left;
+          movedPosition = positionsOfCurrentPlayer[key];
         }
       }
     }
-
     currentPlayer.positions = positionsOfCurrentPlayer;
     players[indexOfCurrentPlayer] = currentPlayer;
-    await room.updateOne({ players: players });
+
+    const idesOfPawns = ['first', 'second', 'third', 'fourth'];
+    for (const playerIndex in players) {
+      const loop_player = players[playerIndex];
+      const loop_playerColor = loop_player.color;
+      if (parseInt(playerIndex) !== indexOfCurrentPlayer) {
+        const loop_playerPositions = loop_player.positions;
+        for (const positionIndex in loop_playerPositions) {
+          const loop_playerPosition = loop_playerPositions[positionIndex];
+          const loop_playerPostionNumber = loop_playerPosition.positionNumber;
+          const loop_playerPositionId = loop_playerPosition.id;
+          const movedPositionNumber = movedPosition.positionNumber;
+          if (loop_playerPostionNumber === movedPositionNumber) {
+            const indexOfPawnId = idesOfPawns.indexOf(`${loop_playerPositionId}`);
+            const basePosition = Positions.basePositions[loop_playerColor][indexOfPawnId];
+            loop_playerPosition.top = basePosition.top;
+            loop_playerPosition.left = basePosition.left;
+            loop_playerPosition.positionNumber = 'base';
+            loop_playerPositions[positionIndex] = loop_playerPosition;
+            loop_player.positions = loop_playerPositions;
+            players[playerIndex] = loop_player;
+          }
+        }
+      }
+    }
+    await room.updateOne({ game: game, players: players });
   }
 
   findCurrentPlayer(players_data, currentPlayerColor_data) {

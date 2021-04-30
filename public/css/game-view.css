@@ -61,6 +61,16 @@
 }
 
 #predict {
-  filter: opacity(50%);
-  background-color: pink;
+  background-color: rgb(109, 33, 46);
+}
+
+.available {
+  animation: availablePawn 0.7s steps(2, end) infinite;
+  cursor: pointer;
+}
+
+@keyframes availablePawn {
+  to {
+    opacity: 0.3;
+  }
 }

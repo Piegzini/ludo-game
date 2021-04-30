@@ -3,7 +3,8 @@ const Room = require('./Models/Room.js');
 const Game = require('./Models/Game.js');
 const Player = require('./Models/Player.js');
 const Gamelogic = require('./Game-logic.js');
-const { basePositions, default: Positions } = require('./static-data/Positions.js');
+
+const Positions  = require('./static-data/Positions.js');
 const uri = 'mongodb+srv://admin:admin@ludo-game.yw3mx.mongodb.net/ludo-game?retryWrites=true&w=majority';
 
 mongoose.connect(uri, {
@@ -76,12 +77,14 @@ module.exports.getColorFromCurrentFreeGame = getColorFromCurrentFreeGame;
 
 const createPlayer = async (player_data) => {
   try {
-    const player_positions = basePositions[player_data.color];
+    const player_positions = Positions.basePositions[player_data.color];
+    const end_Positions = Positions.endPositions[player_data.color];
     const relevant_player_data = {
       id: player_data.id,
       nick: player_data.nick,
       color: player_data.color,
       positions: player_positions,
+      endPositions: end_Positions,
     };
     const createdPlayer = new Player(relevant_player_data);
     return createdPlayer;
@@ -166,5 +169,4 @@ const updatePlayerReadyStatus = async (data_to_find, status_data) => {
     console.log(error);
   }
 };
-console.log(basePositions.red);
 module.exports.updatePlayerReadyStatus = updatePlayerReadyStatus;
