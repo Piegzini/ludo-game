@@ -43,7 +43,7 @@ export default class Gameview {
   rollNumber = async (e) => {
     e.target.removeEventListener('click', this.rollNumber);
     try {
-      const rolledNumber_response = await fetch('http://localhost:8080/rollnumber');
+      const rolledNumber_response = await fetch('/rollnumber');
       const parsed_response = await rolledNumber_response.json();
       const { rolledNumber } = parsed_response;
       const speaker = new Speaker();

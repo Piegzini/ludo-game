@@ -60,7 +60,7 @@ export default class Lobbyview {
   updateReadyStatus = async () => {
     const isReady = this.statusInput.checked;
     const data = { isReady };
-    const response = await fetch('http://localhost:8080/player/isready', {
+    const response = await fetch('/player/isready', {
       method: 'PATCH',
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify(data),

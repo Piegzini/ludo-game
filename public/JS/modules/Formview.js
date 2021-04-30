@@ -18,7 +18,7 @@ export default class Formview {
     console.log(nickValidator, lengthOfNick);
     if (nickValidator && lengthOfNick) {
       try {
-        const response = await fetch('http://localhost:8080/player', {
+        const response = await fetch('/player', {
           method: 'POST',
           headers: { 'Content-Type': 'application/json' },
           body: JSON.stringify(data),

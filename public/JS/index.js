@@ -12,14 +12,14 @@ class View {
   }
 
   async init() {
-    const currentPlayer = await fetch('http://localhost:8080/player');
+    const currentPlayer = await fetch('/player');
     const parsed_currentPlayer = await currentPlayer.json();
     const noPlayer = parsed_currentPlayer?.noPlayer;
     if (!noPlayer) {
       this.currentPlayerData = parsed_currentPlayer;
     }
     try {
-      const response = await fetch('http://localhost:8080/information');
+      const response = await fetch('/information');
       if (!response.ok) {
         throw new Error(`http error: ${response.status}`);
       }
@@ -44,7 +44,7 @@ class View {
 
   lobbyUpdater = async () => {
     try {
-      const response = await fetch('http://localhost:8080/information');
+      const response = await fetch('/information');
       if (!response.ok) {
         throw new Error(`http error: ${response.status}`);
       }
